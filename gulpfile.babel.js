@@ -1,5 +1,6 @@
 import gulp from 'gulp';
-var sass = require('gulp-sass');
+import sass from 'gulp-sass';
+import autoprefixer from 'gulp-autoprefixer'
 var browserSync = require('browser-sync').create();
 var useref = require('gulp-useref');			//concat files
 var uglify = require('gulp-uglify');			//minify
@@ -14,6 +15,7 @@ var runSequence = require('run-sequence');
 gulp.task('build-css', function() {
 	return gulp.src('./app/scss/**/*.scss')
 		.pipe(sass())
+		.pipe(autoprefixer('last 2 versions'))
 		.pipe(gulp.dest('./app/css'))
 		.pipe(browserSync.reload({
 			stream: true,
