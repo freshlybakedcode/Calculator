@@ -1,12 +1,13 @@
-// var gulp = require('gulp');
 import gulp from 'gulp';
 var sass = require('gulp-sass');
 var browserSync = require('browser-sync').create();
-var useref = require('gulp-useref');		//concat files
-var uglify = require('gulp-uglify');		//minify
+var useref = require('gulp-useref');			//concat files
+var uglify = require('gulp-uglify');			//minify
 var gulpIf = require('gulp-if');
 var babel = require('gulp-babel');
 var cleanCSS = require('gulp-clean-css');	//minify
+var imagemin = require('gulp-imagemin');
+var cache = require('gulp-cache');				//cache unchaged images
 var del = require('del');
 var runSequence = require('run-sequence');
 
@@ -36,6 +37,12 @@ gulp.task('useref', function() {
 		.pipe(gulp.dest('dist'))																	//Copy CSS/JS
 });
 
+gulp.task('images', function(){
+  return gulp.src('app/images/**/*.+(png|jpg|gif|svg)')
+  .pipe(cache(imagemin()))
+  .pipe(gulp.dest('dist/images'))
+});
+
 gulp.task('fonts', function() {																//Copy fonts to dit
   return gulp.src('app/fonts/**/*')
   .pipe(gulp.dest('dist/fonts'))
@@ -47,18 +54,16 @@ gulp.task('clean:dist', function() {													//Delete the dist folder
 
 gulp.task('watch', ['browserSync', 'build-css'], function() {
 	gulp.watch('./app/scss/**/*.scss', ['build-css']);
-	// Also reloads the browser when HTML or JS changes
-  gulp.watch('app/*.html', browserSync.reload); 
+  gulp.watch('app/*.html', browserSync.reload); 							// Also reloads the browser when HTML or JS changes					
   gulp.watch('app/js/**/*.js', browserSync.reload); 
 });
 
 gulp.task('build', function (callback) {											//Prep dist
   runSequence('clean:dist', 
-    ['build-css', 'useref', 'fonts'],
+    ['build-css', 'useref', 'images', 'fonts'],
     callback
   )
 })
-
 gulp.task('default', function (callback) {										//Initial dev build then watch
   runSequence(['build-css','browserSync', 'watch'],
     callback
