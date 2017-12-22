@@ -1,3 +1,3 @@
-#Calculator
+# Calculator
 
-##A calculator built in JavaScript
+## A calculator built in JavaScript
