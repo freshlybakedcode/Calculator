@@ -34,7 +34,8 @@ gulp.task('useref', () => {
 	return gulp.src('./app/*.html')
 		.pipe(useref())																						//Concat CSS/JS
 		.pipe(gulpIf('*.js', babel({presets: ['es2015']})))				//Transpile JS
-		.pipe(gulpIf('*.js', uglify()))														//Minify JS
+		.pipe(gulpIf('*.js', uglify(															//Minify JS
+			{compress: { drop_console: false }})))									//Strip console.logs			
 		.pipe(gulpIf('*.css', cleanCSS({compatibility: 'ie8'})))	//Minify CSS
 		.pipe(gulp.dest('dist'))																	//Copy CSS/JS
 });
