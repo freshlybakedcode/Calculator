@@ -38,6 +38,11 @@ function clearBuffer() {
 	buffer.length = 0;
 }
 
+function tooMuchData() {
+	buffer = ['Err'];
+	updateOutput();
+}
+
 function updateOutput(data) {
 	console.log(`updateOutput(${data}) fired.  typeof data = ${typeof data}`);
 	if (data) {
@@ -56,39 +61,48 @@ function getResult() {
 	result = eval(tempSum.join("") + bufferJoined());
 	result = result ? result : 'exception';									//If result undefined, reset to 0 (If user immediately presses '=' for example);
 	console.log(`getResult() returns ${result}`);
-	buffer = [result];
-	return result;
+	console.log('result.length: ' + result.length);
+	if (String(result).replace('.', '').length > 10) {
+		tooMuchData();
+	} else {
+		buffer = [result];
+		return result;
+	}
 }
 
 function handleButtonPress(e) {
 	if (e.path[0].dataset.value === "res") {								//User presses '='
-		if (buffer.length === 0) {														//If user has pressed '=' after 'C' (will return buffer + 0)
+		if (buffer.length === 0) {											//If user has pressed '=' after 'C' (will return buffer + 0)
 			buffer.push(0);
 		}
-		if (tempSum[0] === 'exception') {											//If user has pressed 'CE' and then immediately pressed operator button...
-			tempSum.shift();																		//...will remove 'exception' and add '0'
+		if (tempSum[0] === 'exception') {									//If user has pressed 'CE' and then immediately pressed operator button...
+			tempSum.shift();												//...will remove 'exception' and add '0'
 			tempSum.unshift('0');
 		}
 		toggleOffAllOperators();
 		updateOutput(getResult());
 		resetBuffer();
 		tempSum.length = 0;
-	} else if (e.path[0].dataset.value === "ce") { 					//Clear current input - remove from buffer and update output to be empty
+	} else if (e.path[0].dataset.value === "ce") { 							//Clear current input - remove from buffer and update output to be empty
 		buffer.length = 0;
 		updateOutput();
-	} else if (e.path[0].dataset.value === "c") {						//Clear everything. Remove from buffer, tempSum, result and update output to zero. Remove active operator class
+	} else if (e.path[0].dataset.value === "c") {							//Clear everything. Remove from buffer, tempSum, result and update output to zero. Remove active operator class
 		buffer.length = 0;
 		tempSum.length = 0;
 		result = 0;
 		toggleOffAllOperators();
 		updateOutput('0');
-	} else if (e.path[0].classList.contains('operator')) {  //Check if operator and add class
+	} else if (e.path[0].classList.contains('operator')) {  				//Check if operator and add class
 		toggleOffAllOperators();
 		toggleOperator(e.path[0]);
 		handleOperator(e.path[0]);
 	}
 	else {
-		buffer.push(e.path[0].dataset.value);
-		updateOutput();
+		if (buffer.length > 10 || buffer[0]==='Err') {
+			tooMuchData();
+		} else {
+			buffer.push(e.path[0].dataset.value);
+			updateOutput();
+		}
 	}
 }
