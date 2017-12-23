@@ -62,7 +62,7 @@ function getResult() {
 	result = result ? result : 'exception';									//If result undefined, reset to 0 (If user immediately presses '=' for example);
 	console.log(`getResult() returns ${result}`);
 	console.log('result.length: ' + result.length);
-	if (String(result).replace('.', '').length > 10) {
+	if (String(result).replace('.', '').length > 10 || result == 'Infinity') {
 		tooMuchData();
 	} else {
 		buffer = [result];
@@ -98,7 +98,7 @@ function handleButtonPress(e) {
 		handleOperator(e.path[0]);
 	}
 	else {
-		if (buffer.length > 10 || buffer[0]==='Err') {
+		if (buffer.length > 10 || buffer[0]==='Err' || buffer[0]=='Infinity') {
 			tooMuchData();
 		} else {
 			buffer.push(e.path[0].dataset.value);
