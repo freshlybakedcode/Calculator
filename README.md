@@ -10,4 +10,4 @@
 ### To build distribution files:
 * `gulp build`
 
-![alt text](https://raw.githubusercontent.com/freshlybakedcode/Calculator/master/s-l300.jpg)
+![A picture of an old calculator](https://raw.githubusercontent.com/freshlybakedcode/Calculator/master/s-l300.jpg)
