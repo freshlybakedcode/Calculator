@@ -4,6 +4,7 @@ let tempSum = [];
 const maxDigits = 9;
 const buttons = document.querySelectorAll(".button");
 const output = document.querySelector('.output');
+
 buttons.forEach(button => button.addEventListener("click", handleButtonPress));
 
 function toggleOperator(currentButton) {
@@ -61,6 +62,13 @@ function updateOutput(data) {
 }
 
 function getResult() {
+	const firstDigitOfBuffer = buffer[0];
+	const lastDigitOfTempSum = tempSum[tempSum.length-1];
+	if (firstDigitOfBuffer === '-' && lastDigitOfTempSum === '-') {			//Handle double negatives; shift/pop exisiting '--' and replace with '+'
+		buffer.shift();
+		tempSum.pop();
+		tempSum.push('+');
+	} 
 	console.log(`getResult() fired, ${tempSum.join("") + bufferJoined()}`);
 	result = eval(tempSum.join("") + bufferJoined());
 	result = result ? result : 'exception';									//If result undefined, reset to 0 (If user immediately presses '=' for example);
@@ -75,40 +83,43 @@ function getResult() {
 }
 
 function handleButtonPress(e) {
-	console.log(`handleButtonPress(${e}) fired. buffer: ${buffer}`);
-	if (e.path[0].dataset.value === "res") {								//User presses '='
-		if (buffer.length === 0) {											//If user has pressed '=' after 'C' (will return buffer + 0)
+	const valueOfButton = e.path[0].dataset.value;
+	if (valueOfButton === "res") {								//User presses '='
+		if (buffer.length === 0) {								//If user has pressed '=' after 'C' (will return buffer + 0)
 			buffer.push(0);
 		}
-		if (tempSum[0] === 'exception') {									//If user has pressed 'CE' and then immediately pressed operator button...
-			tempSum.shift();												//...will remove 'exception' and add '0'
+		if (tempSum[0] === 'exception') {						//If user has pressed 'CE' and then immediately pressed operator button...
+			tempSum.shift();									//...will remove 'exception' and add '0'
 			tempSum.unshift('0');
 		}
 		toggleOffAllOperators();
 		updateOutput(getResult());
 		resetBuffer();
 		tempSum.length = 0;
-	} else if (e.path[0].dataset.value === "ce") { 							//Clear current input - remove from buffer and update output to be empty
+	} else if (valueOfButton === "ce") { 						//Clear current input - remove from buffer and update output to be empty
 		buffer.length = 0;
 		updateOutput();
-	} else if (e.path[0].dataset.value === "c") {							//Clear everything. Remove from buffer, tempSum, result and update output to zero. Remove active operator class
+	} else if (valueOfButton === "c") {							//Clear everything. Remove from buffer, tempSum, result and update output to zero. Remove active operator class
 		buffer.length = 0;
 		tempSum.length = 0;
 		result = 0;
 		toggleOffAllOperators();
 		updateOutput('0');
 	} else if (e.path[0].classList.contains('operator') && buffer[0] !=='Err') {  	//Check if operator and add class
-		console.log(`operator button clicked. buffer: ${buffer} buffer[0]: ${buffer[0]}`);
-		toggleOffAllOperators();
-		toggleOperator(e.path[0]);
-		handleOperator(e.path[0]);
+		if (buffer.length === 0 && valueOfButton==='-') {
+			buffer.push(valueOfButton);
+			updateOutput();
+		} else {
+			toggleOffAllOperators(); 
+			toggleOperator(e.path[0]);
+			handleOperator(e.path[0]);
+		}
 	}
 	else {
-		console.log('something else occurs');
 		if (buffer.length > maxDigits || buffer[0]==='Err' || buffer[0]=='Infinity') {
 			throwError();
 		} else {
-			buffer.push(e.path[0].dataset.value);
+			buffer.push(valueOfButton);
 			updateOutput();
 		}
 	}
