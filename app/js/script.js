@@ -1,7 +1,7 @@
 let buffer = [];
 let result = 0;
 let tempSum = [];
-
+const maxDigits = 9;
 const buttons = document.querySelectorAll(".button");
 const output = document.querySelector('.output');
 buttons.forEach(button => button.addEventListener("click", handleButtonPress));
@@ -16,7 +16,7 @@ function toggleOffAllOperators() {
 		}
 	});
 }
-function handleOperator(currentButton) {								//Solve intermediate sum
+function handleOperator(currentButton) {					//Solve intermediate sum
 	const lastItemInTempSum = tempSum[tempSum.length-1]; 	//Check to see if two operators are present and remove the first if that's the case
 	if (lastItemInTempSum === '*' || lastItemInTempSum === '+' || lastItemInTempSum === '-' || lastItemInTempSum === '/') {
 		tempSum.pop();
@@ -35,16 +35,20 @@ function resetBuffer() {
 	buffer.push(result);
 }
 function clearBuffer() {
-	buffer.length = 0;
+	if (buffer[0] !== 'Err') {
+		buffer.length = 0;
+	}
 }
 
-function tooMuchData() {
+function throwError() {
+	console.log(`throwError() fired`);
 	buffer = ['Err'];
+	console.log(`buffer: ${buffer}`);
 	updateOutput();
 }
 
 function updateOutput(data) {
-	console.log(`updateOutput(${data}) fired.  typeof data = ${typeof data}`);
+	console.log(`updateOutput(${data}) fired.  typeof data = ${typeof data}. buffer: ${buffer}`);
 	if (data) {
 		if (data === 'exception') {
 			data = '0';
@@ -62,8 +66,8 @@ function getResult() {
 	result = result ? result : 'exception';									//If result undefined, reset to 0 (If user immediately presses '=' for example);
 	console.log(`getResult() returns ${result}`);
 	console.log('result.length: ' + result.length);
-	if (String(result).replace('.', '').length > 10 || result == 'Infinity') {
-		tooMuchData();
+	if (String(result).replace('.', '').length > maxDigits || result == 'Infinity') {
+		throwError();
 	} else {
 		buffer = [result];
 		return result;
@@ -71,6 +75,7 @@ function getResult() {
 }
 
 function handleButtonPress(e) {
+	console.log(`handleButtonPress(${e}) fired. buffer: ${buffer}`);
 	if (e.path[0].dataset.value === "res") {								//User presses '='
 		if (buffer.length === 0) {											//If user has pressed '=' after 'C' (will return buffer + 0)
 			buffer.push(0);
@@ -92,14 +97,16 @@ function handleButtonPress(e) {
 		result = 0;
 		toggleOffAllOperators();
 		updateOutput('0');
-	} else if (e.path[0].classList.contains('operator')) {  				//Check if operator and add class
+	} else if (e.path[0].classList.contains('operator') && buffer[0] !=='Err') {  	//Check if operator and add class
+		console.log(`operator button clicked. buffer: ${buffer} buffer[0]: ${buffer[0]}`);
 		toggleOffAllOperators();
 		toggleOperator(e.path[0]);
 		handleOperator(e.path[0]);
 	}
 	else {
-		if (buffer.length > 10 || buffer[0]==='Err' || buffer[0]=='Infinity') {
-			tooMuchData();
+		console.log('something else occurs');
+		if (buffer.length > maxDigits || buffer[0]==='Err' || buffer[0]=='Infinity') {
+			throwError();
 		} else {
 			buffer.push(e.path[0].dataset.value);
 			updateOutput();

@@ -10,19 +10,28 @@
 
 body {
   background: -webkit-gradient(linear, left top, right top, from(#4ac29a), to(#bdfff3));
-  background: linear-gradient(to right, #4ac29a, #bdfff3); }
+  background: linear-gradient(to right, #4ac29a, #bdfff3);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center; }
 
 .calculator {
-  margin: 3em auto;
   background: -webkit-gradient(linear, left top, right top, from(#6d6678), color-stop(5%, #352E40));
   background: linear-gradient(to right, #6d6678 0%, #352E40 5%);
-  max-width: 300px;
   border-radius: 20px;
   overflow: hidden;
   -webkit-box-shadow: 3px 2px 12px 0px #333;
-          box-shadow: 3px 2px 12px 0px #333; }
+          box-shadow: 3px 2px 12px 0px #333;
+  width: 270px; }
 
-.top {
+.top-bulge {
+  display: block;
   padding: 1.7em;
   margin-bottom: 0.8em;
   border-bottom-right-radius: 10px;
@@ -34,7 +43,6 @@ body {
 .screen {
   display: block;
   overflow: auto;
-  width: 100%;
   background: -webkit-gradient(linear, left top, right top, from(#6d6678), color-stop(5%, #000000));
   background: linear-gradient(to right, #6d6678 0%, #000000 5%);
   text-align: right;
@@ -76,13 +84,14 @@ body {
     margin-left: auto; }
 
 .output {
+  color: #7EEDF4;
   display: block;
   font-family: 'lcdnormal';
-  font-size: 2em;
-  color: #7EEDF4;
-  text-shadow: #a9f8fd 0px 0px 1px;
-  padding: 0.3em 1em;
-  letter-spacing: 4px; }
+  font-size: 1.8em;
+  letter-spacing: 4px;
+  line-height: 1.4em;
+  padding: 0 1em;
+  text-shadow: #a9f8fd 0px 0px 2px; }
 
 .keypad {
   display: -webkit-box;
@@ -92,9 +101,28 @@ body {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  padding: 1em 2em;
-  border-top: 1px solid black;
-  padding-top: 1.5em; }
+  padding: 1.5em 1.8em 1em 1.8em;
+  border-top: 1px solid black; }
+
+.button {
+  background: linear-gradient(261deg, #d4d4d4 1%, #fffeff 13%);
+  border-radius: 5px;
+  -webkit-box-shadow: 2px 2px 3px -1px #111;
+          box-shadow: 2px 2px 3px -1px #111;
+  cursor: pointer;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  font-family: sans-serif;
+  font-size: 1em;
+  font-weight: bold;
+  line-height: 1.6em;
+  margin-bottom: 17px;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center; }
+  .button.selected {
+    background: #d4d4d4; }
 
 .clear-buttons {
   display: -webkit-box;
@@ -113,7 +141,9 @@ body {
         -ms-flex-direction: row;
             flex-direction: row;
     color: white;
-    font-size: 0.8em; }
+    font-size: 0.8em;
+    border-radius: 3px;
+    line-height: 1.8em; }
 
 .numbers-and-operators {
   display: -webkit-box;
@@ -137,30 +167,6 @@ body {
   .number-buttons .button {
     -ms-flex-preferred-size: 26%;
         flex-basis: 26%; }
-
-.button {
-  font-size: 1em;
-  font-family: sans-serif;
-  font-weight: bold;
-  border-radius: 5px;
-  cursor: pointer;
-  text-align: center;
-  background: linear-gradient(261deg, #d4d4d4 1%, #fffeff 13%);
-  height: 30px;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  margin-bottom: 17px;
-  -webkit-box-shadow: 2px 2px 3px -1px #111;
-          box-shadow: 2px 2px 3px -1px #111; }
-  .button .selected {
-    background-color: red; }
 
 .operator-buttons {
   -ms-flex-preferred-size: 23%;
