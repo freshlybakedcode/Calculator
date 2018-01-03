@@ -102,8 +102,6 @@ function getResult() {
 }
 
 function handleButtonPress(e) {
-	console.log(e);
-	console.log(e.dataset);
 	const valueOfButton = e.path[0].dataset.value;
 	if (valueOfButton === "res") {								//User presses '='
 		if (buffer.length === 0) {								//If user has pressed '=' after 'C' (will return buffer + 0)
