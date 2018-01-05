@@ -56,7 +56,7 @@ function resetBuffer() {
 }
 function clearBuffer() {
 	if (buffer[0] !== 'Err') {
-		buffer.length = 0;
+		buffer = [];
 	}
 }
 
@@ -104,7 +104,7 @@ function getResult() {
 function handleButtonPress(e) {
 	const valueOfButton = e.path[0].dataset.value;
 	if (valueOfButton === "res") {								//User presses '='
-		if (buffer.length === 0) {								//If user has pressed '=' after 'C' (will return buffer + 0)
+		if (!buffer.length) {								//If user has pressed '=' after 'C' (will return buffer + 0)
 			buffer.push(0);
 		}
 		if (tempSum[0] === 'exception') {						//If user has pressed 'CE' and then immediately pressed operator button...
@@ -114,18 +114,18 @@ function handleButtonPress(e) {
 		toggleOffAllOperators();
 		updateOutput(getResult());
 		resetBuffer();
-		tempSum.length = 0;
+		tempSum = [];
 	} else if (valueOfButton === "ce") { 						//Clear current input - remove from buffer and update output to be empty
-		buffer.length = 0;
+		buffer = [];
 		updateOutput();
 	} else if (valueOfButton === "c") {							//Clear everything. Remove from buffer, tempSum, result and update output to zero. Remove active operator class
-		buffer.length = 0;
-		tempSum.length = 0;
+		buffer = [];
+		tempSum = [];
 		result = 0;
 		toggleOffAllOperators();
 		updateOutput('0');
 	} else if (e.path[0].classList.contains('operator') && buffer[0] !== 'Err') {  	//Check if operator and add class
-		if (buffer.length === 0 && valueOfButton === '-') {
+		if (!buffer.length && valueOfButton === '-') {
 			buffer.push(valueOfButton);
 			updateOutput();
 		} else {
