@@ -5,7 +5,7 @@ const maxDigits = 9;
 const buttons = document.querySelectorAll(".button");
 const output = document.querySelector('.output');
 
-//Polyfill for Safari because it might as well be IE I'm working with here.
+//Polyfill for handleButtonPress.path
 if (!('path' in Event.prototype)) {
 	Object.defineProperty(Event.prototype, 'path', {
 		get: function () {
@@ -74,9 +74,9 @@ function updateOutput(data) {
 			data = '0';
 			result = '';
 		}
-		output.innerHTML = data;
+		output.innerText = data;
 	} else {
-		output.innerHTML = bufferJoined();
+		output.innerText = bufferJoined();
 	}
 }
 
