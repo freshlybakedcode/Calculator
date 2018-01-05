@@ -67,7 +67,7 @@ function throwError() {
 	updateOutput();
 }
 
-function updateOutput(data) {
+function updateOutput(data = false) {
 	console.log(`updateOutput(${data}) fired.  typeof data = ${typeof data}. buffer: ${buffer}`);
 	if (data) {
 		if (data === 'exception') {
