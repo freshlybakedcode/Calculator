@@ -9,6 +9,7 @@ import babel from 'gulp-babel';
 import cleanCSS from 'gulp-clean-css';	//minify
 import imagemin from 'gulp-imagemin';
 import cache from 'gulp-cache';					//cache unchaged images
+import shell from 'gulp-shell';
 import del from 'del';
 import runSequence from 'run-sequence';
 
@@ -67,6 +68,9 @@ gulp.task('build', (callback) => {												//Prep dist
     callback
   )
 });
+gulp.task('deploy-ghp', 																	//Deploy to Github pages
+	shell.task('git subtree push --prefix dist origin gh-pages')
+);
 gulp.task('default', (callback) => {											//Initial dev build then watch
   runSequence(['build-css','browserSync', 'watch'],
     callback
